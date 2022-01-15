@@ -13,7 +13,7 @@ use seed::{prelude::*, *};
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model { 
         a: 0,
-        //input_element_a: ElRef::new(),
+        input_element_a: ElRef::new(),
         counter: 0 
     }
 }
@@ -25,7 +25,7 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 // `Model` describes our app state.
 struct Model {
     a: i32,
-    //input_element_a: ElRef<web_sys::HtmlInputElement>,
+    input_element_a: ElRef<web_sys::HtmlInputElement>,
     counter: i32,
 }
 
@@ -37,16 +37,17 @@ struct Model {
 #[derive(Copy, Clone)]
 // `Msg` describes the different events you can modify state with.
 enum Msg {
+    InputChanged(i32),
     Increment,
 }
 
 // `update` describes how to handle each `Msg`.
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
-        // Msg::InputChanged(number) => {
-        //     log!(number);
-        //     model.a = number;
-        // }
+        Msg::InputChanged(number) => {
+            log!(number);
+            model.a = number;
+        },
         Msg::Increment => model.counter += 1,
     }
 }
@@ -62,10 +63,14 @@ fn view(model: &Model) -> Node<Msg> {
         C!["counter"],
         form![
             input![
-               // el_ref(&model.input_element_a),
+               el_ref(&model.input_element_a),
                 attrs! {
                     At::Type => "number"
-                }
+                },
+                ev(Ev::Input, |event| {
+                    let element = event.target().unwrap().unchecked_into::<web_sys::HtmlInputElement>();
+                    IF!(element.report_validity() => Msg::InputChanged(element.value().parse().unwrap_or_default()))
+                }),
             ],
             " + ",
             input![
