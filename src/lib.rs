@@ -11,10 +11,12 @@ use seed::{prelude::*, *};
 
 // `init` describes what should happen when your app started.
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
-    Model { 
+    Model {
         a: 0,
         input_element_a: ElRef::new(),
-        counter: 0 
+        b: 0,
+        input_element_b: ElRef::new(),
+        total: 0,
     }
 }
 
@@ -26,7 +28,9 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 struct Model {
     a: i32,
     input_element_a: ElRef<web_sys::HtmlInputElement>,
-    counter: i32,
+    b: i32,
+    input_element_b: ElRef<web_sys::HtmlInputElement>,
+    total: i32,
 }
 
 // ------ ------
@@ -37,18 +41,23 @@ struct Model {
 #[derive(Copy, Clone)]
 // `Msg` describes the different events you can modify state with.
 enum Msg {
-    InputChanged(i32),
-    Increment,
+    InputAChanged(i32),
+    InputBChanged(i32),
+    Equals,
 }
 
 // `update` describes how to handle each `Msg`.
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
-        Msg::InputChanged(number) => {
+        Msg::InputAChanged(number) => {
             log!(number);
             model.a = number;
-        },
-        Msg::Increment => model.counter += 1,
+        }
+        Msg::InputBChanged(number) => {
+            log!(number);
+            model.b = number;
+        }
+        Msg::Equals => model.total = model.a + model.b
     }
 }
 
@@ -59,28 +68,41 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 // `view` describes what to display.
 fn view(model: &Model) -> Node<Msg> {
     div![
-        "This is a counter: ",
+        "Enterprise ready addition: ",
         C!["counter"],
-        form![
-            input![
-               el_ref(&model.input_element_a),
-                attrs! {
-                    At::Type => "number"
-                },
-                ev(Ev::Input, |event| {
-                    let element = event.target().unwrap().unchecked_into::<web_sys::HtmlInputElement>();
-                    IF!(element.report_validity() => Msg::InputChanged(element.value().parse().unwrap_or_default()))
-                }),
-            ],
-            " + ",
-            input![
-                attrs! {
-                    At::Type => "number"
-                }
-            ],
-            button![" = "]
+        input![
+            el_ref(&model.input_element_a),
+            attrs! {
+                At::Type => "number"
+            },
+            ev(Ev::Input, |event| {
+                let element = event
+                    .target()
+                    .unwrap()
+                    .unchecked_into::<web_sys::HtmlInputElement>();
+                IF!(element.report_validity() => Msg::InputAChanged(element.value().parse().unwrap_or_default()))
+            }),
         ],
-        button![model.counter, ev(Ev::Click, |_| Msg::Increment),],
+        " + ",
+        input![
+            el_ref(&model.input_element_b),
+            attrs! {
+                At::Type => "number"
+            },
+            ev(Ev::Input, |event| {
+                let element = event
+                    .target()
+                    .unwrap()
+                    .unchecked_into::<web_sys::HtmlInputElement>();
+                IF!(element.report_validity() => Msg::InputBChanged(element.value().parse().unwrap_or_default()))
+            }),
+        ],
+        button![" = ", ev(Ev::Click, |_| Msg::Equals)],
+        input![attrs! {
+            At::Type => "number",
+            At::ReadOnly => true,
+            At::Value => model.total.to_string()
+        }]
     ]
 }
 
