@@ -19,4 +19,6 @@ module "lambda_function" {
       source_arn = "${module.api_gateway.apigatewayv2_api_execution_arn}/*/*"
     }
   }
+
+    tags = var.tags
 }

@@ -10,9 +10,9 @@ variable "lambda_dir" {
     default = "/Users/mikey/Projects/rust/enterprise-add/lambda"
 }
 
-locals {
-  tags = {
-      Project = var.project
+variable "tags" {
+  default = {
+      Project = "Enterprise Add"
       Org = "quezlatch"
   }
 }
