@@ -32,7 +32,7 @@ module "api_gateway" {
   # Routes and integrations
   integrations = {
     "POST /add-numbers" = {
-      lambda_arn             = module.lambda_function.lambda_function_arn
+      lambda_arn             = module.api_lambda.lambda_function_arn
       payload_format_version = "2.0"
       timeout_milliseconds   = 12000
     }
