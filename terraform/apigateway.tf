@@ -3,7 +3,7 @@ module "log_group" {
   source  = "terraform-aws-modules/cloudwatch/aws//modules/log-group"
   version = "~> 2.0"
 
-  name              = "enterprise-add"
+  name              = "api_logs"
   retention_in_days = 120
 
   tags = var.tags
@@ -12,8 +12,8 @@ module "log_group" {
 module "api_gateway" {
   source = "terraform-aws-modules/apigateway-v2/aws"
 
-  name          = var.project
-  description   = "Enterprise Add HTTP API Gateway"
+  name          = "gateway"
+  description   = "${var.project} HTTP API Gateway"
   protocol_type = "HTTP"
 
   create_api_domain_name = false

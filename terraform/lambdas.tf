@@ -2,9 +2,9 @@ module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 2.0"
 
-  function_name = "enterprise-add-api-lambda"
-  description   = "Enterprise add api"
-  handler       = "qq"
+  function_name = "api-lambda"
+  description   = "${var.project} API"
+  handler       = "dummy"
   runtime       = "provided.al2"
   architectures = ["x86_64"]
 
