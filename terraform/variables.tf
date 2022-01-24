@@ -1,18 +1,18 @@
 variable "project" {
-   default =   "Enterprise Add"
+  default = "Enterprise Add"
 }
 
 variable "prefix" {
-   default =   "enterprise_add"
+  default = "enterprise_add"
 }
 
 variable "lambda_dir" {
-    default = "/Users/mikey/Projects/rust/enterprise-add/lambda"
+  default = "/Users/mikey/Projects/rust/enterprise-add/lambda"
 }
 
 variable "tags" {
   default = {
-      Project = "Enterprise Add"
-      Org = "quezlatch"
+    Project = "Enterprise Add"
+    Org     = "quezlatch"
   }
 }

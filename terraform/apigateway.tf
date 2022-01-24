@@ -4,7 +4,7 @@ module "log_group" {
   version = "~> 2.0"
 
   name              = "api_logs"
-  retention_in_days = 120
+  retention_in_days = 1
 
   tags = var.tags
 }
