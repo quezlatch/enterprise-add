@@ -8,6 +8,7 @@ version = "0.1.0"
 dependencies = [
  "lambda_runtime",
  "log",
+ "logic",
  "serde",
  "serde_derive",
  "serde_json",
@@ -20,6 +21,7 @@ version = "0.1.0"
 dependencies = [
  "lambda_http",
  "log",
+ "logic",
  "serde",
  "serde_derive",
  "serde_json",

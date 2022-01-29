@@ -1,17 +1,6 @@
 use lambda_runtime::{handler_fn, Context, Error};
 use log::info;
-#[macro_use]
-extern crate serde_derive;
-
-#[derive(Deserialize, Clone)]
-struct AddEvent {
-    numbers: Vec<i32,>
-}
-
-#[derive(Serialize, Clone)]
-struct Output {
-    result: i32
-}
+use logic::{AddOperation, OperationResult};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -20,12 +9,10 @@ async fn main() -> Result<(), Error> {
     Ok(())
 }
 
-async fn func(event: AddEvent, _: Context) -> Result<Output, Error> {
-    let result: i32 = event.numbers.iter().sum();
+async fn func(event: AddOperation, _: Context) -> Result<OperationResult, Error> {
+    let result = event.to_output();
 
-    info!("summing result = {}", result);
+    info!("summing result = {}", result.get_result());
 
-    Ok(Output {
-        result: result
-    })
+    Ok(result)
 }

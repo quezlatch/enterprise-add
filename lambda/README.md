@@ -23,3 +23,5 @@ docker run \
   cargo build --release --target ${RUST_TARGET}
 zip -j rust.zip target/x86_64-unknown-linux-gnu/release/bootstrap
 ```
+
+In future would it be better to do the whole build in docker?

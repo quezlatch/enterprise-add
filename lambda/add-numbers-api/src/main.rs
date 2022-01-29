@@ -5,18 +5,7 @@ use lambda_http::{
 };
 use log::info;
 use http::StatusCode;
-#[macro_use]
-extern crate serde_derive;
-
-#[derive(Deserialize, Clone)]
-struct AddEvent {
-    numbers: Vec<i32>,
-}
-
-#[derive(Serialize, Clone)]
-struct Output {
-    result: i32,
-}
+use logic::{AddOperation};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -27,12 +16,10 @@ async fn main() -> Result<(), Error> {
 async fn func(request: Request, _: Context) -> Result<impl IntoResponse, Error> {
     info!("uri = {}", request.uri());
 
-    match serde_json::from_slice::<AddEvent>(request.body().as_ref()) {
+    match serde_json::from_slice::<AddOperation>(request.body().as_ref()) {
         Ok(add) => {
             info!("all good");
-            let result = Output {
-                result: add.numbers.iter().sum(),
-            };
+            let result = add.to_output();
             Ok(serde_json::json!(result).into_response())
         }
         Err(_) => Ok(Response::builder()

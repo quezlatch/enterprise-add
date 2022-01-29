@@ -9,7 +9,9 @@ script = '''
 docker run \
   --platform ${LAMBDA_ARCH} \
   --rm --user "$(id -u)":"$(id -g)" \
-  -v "${PWD}":/usr/src/myapp -w /usr/src/myapp rust:${RUST_VERSION} \
+  -v "${PWD}/../../logic":/usr/src/logic \
+  -v "${PWD}":/usr/src/lambda/myapp \
+  -w /usr/src/lambda/myapp rust:${RUST_VERSION} \
   cargo build --release --target ${RUST_TARGET}
 '''
 
