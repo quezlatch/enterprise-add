@@ -4,6 +4,7 @@
 #![allow(clippy::wildcard_imports)]
 
 use seed::{prelude::*, *};
+use logic::AddOperation;
 
 // ------ ------
 //     Init
@@ -57,7 +58,10 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
             log!(number);
             model.b = number;
         }
-        Msg::Equals => model.total = model.a + model.b
+        Msg::Equals => {
+            let operation = AddOperation::new(&[model.a, model.b]);
+            model.total = operation.to_output().get_result()
+        }
     }
 }
 

@@ -1,0 +1,21 @@
+[tasks.terraform]
+description = "terraform"
+command = "terraform"
+
+[tasks.init]
+extend = "terraform"
+args = ["init"]
+
+[tasks.plan]
+extend = "terraform"
+args = ["plan"]
+dependencies = ["init"]
+
+[tasks.apply]
+extend = "terraform"
+args = ["apply", "-auto-approve"]
+dependencies = ["init"]
+
+[tasks.destroy]
+extend = "terraform"
+args = ["destroy", "-auto-approve"]

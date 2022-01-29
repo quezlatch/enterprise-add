@@ -2,5 +2,7 @@
 
 members = [
     "frontend",
+    "logic",
     "lambda/add-numbers",
+    "lambda/add-numbers-api",
 ]
