@@ -22,23 +22,3 @@ module "api_lambda" {
 
   tags = var.tags
 }
-
-module "sqs_lambda" {
-  source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.0"
-
-  function_name = "sqs-lambda"
-  description   = "${var.project} SQS"
-  handler       = "dummy"
-  runtime       = "provided.al2"
-  architectures = ["x86_64"]
-
-  publish = true
-
-  create_package         = false
-  local_existing_package = "${var.lambda_dir}/add-numbers/target/rust.zip"
-
-  # TODO SQS trigger
-
-  tags = var.tags
-}
