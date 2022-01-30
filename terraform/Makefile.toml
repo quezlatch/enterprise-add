@@ -19,3 +19,13 @@ dependencies = ["init"]
 [tasks.destroy]
 extend = "terraform"
 args = ["destroy", "-auto-approve"]
+
+[tasks.write_url]
+description = "update the frontend with the api gateway url. probably a better way to do this..."
+script = '''
+echo "pub const API_BASE_URL: &str = `terraform output api_endpoint`;" > ../frontend/src/constants.rs
+'''
+
+[tasks.deploy]
+description = "get backend deployed and ready for frontend"
+run_task = { name = ["apply", "write_url"] }

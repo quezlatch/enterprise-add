@@ -69,6 +69,8 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 //     View
 // ------ ------
 
+mod constants;
+
 // `view` describes what to display.
 fn view(model: &Model) -> Node<Msg> {
     div![
@@ -106,7 +108,11 @@ fn view(model: &Model) -> Node<Msg> {
             At::Type => "number",
             At::ReadOnly => true,
             At::Value => model.total.to_string()
-        }]
+        }],
+        div![
+            "API base url",
+            constants::API_BASE_URL
+        ]
     ]
 }
 

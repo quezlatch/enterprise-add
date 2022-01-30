@@ -289,3 +289,6 @@ Cargo.lock
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,rust,visualstudiocode,node
+
+# so that api constant does not get committed. probably a better way to do this...
+frontend/src/constants.rs
