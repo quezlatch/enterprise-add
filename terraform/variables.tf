@@ -7,7 +7,7 @@ variable "prefix" {
 }
 
 variable "lambda_dir" {
-  default = "/Users/mikey/Projects/rust/enterprise-add/lambda"
+  default = "/workspaces/enterprise-add/lambda"
 }
 
 variable "tags" {
