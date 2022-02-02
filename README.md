@@ -2,8 +2,31 @@
 
 Adding numbers together might seem simple, but how do you make it enterprise?
 
+A bit of fun to make an isomorphic rust application in a mono repo that includes both frontend (webassembly) and backend (aws serverless).
 
-## Requirements
+## Getting started
+
+Still a work in progress... but a `vs code/docker` combo should make life easier. Either **Docker for Mac/Windows** or
+the CLI if you're brave/need the license and don't have it.
+
+Aside (https://github.com/abiosoft/colima might do the business on mac)
+
+Steps:
+* make sure you have a aws profile for `add-number-tf` for **terraform**. Docker maps the .aws folder. Probably a better way for this...
+* checkout repo
+* open `code` in that folder
+* hopefully the remote container magic will happen
+* in the VS terminal...
+* in `/workspaces/enterprise-add/lambda/add-numbers` do `cargo make packagelambda`
+* same again in `/workspaces/enterprise-add/lambda/add-numbers`
+* in `/workspaces/enterprise-add/terraform` do `cargo make deploy`
+* phew! that should do the backend
+* in `/workspaces/enterprise-add/frontend` do `cargo make watch` and `cargo make serve` in two separate windows
+* open http://localhost:8000 in the browser
+
+There's a lot going on here, but I can hopefully refine when i understand `cargo make` better.
+
+## Requirements (not required now i've got remote containers working)
 
 * rust (obvs)
 * terraform
