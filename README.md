@@ -47,3 +47,17 @@ There's a lot going on here, but I can hopefully refine when i understand `cargo
 
 * should `logic` expose serde, etc and the apps use them through that?
 * should the whole thing be built through docker?
+
+## Todo
+
+[ ] call api from frontend
+[ ] api gateway to sqs
+[ ] sqs response through websockets
+[ ] call async api from frontend
+[ ] rust selenium anyone?
+[ ] lambda logging
+[ ] xray with spans'n'stuff
+[ ] sqs message validation in api gateway
+[ ] api keys?
+[ ] better automation
+[ ] s3 website for frontend

@@ -110,7 +110,8 @@ fn view(model: &Model) -> Node<Msg> {
             At::Value => model.total.to_string()
         }],
         div![
-            "API base url",
+            br![],
+            "API base url: ",
             constants::API_BASE_URL
         ]
     ]
