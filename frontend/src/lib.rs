@@ -69,11 +69,12 @@ enum Msg {
     InputAChanged(i32),
     InputBChanged(i32),
     Equals,
-    CalculationMethodChanged(String)
+    TotalCalculated(i32),
+    CalculationMethodChanged(String),
 }
 
 // `update` describes how to handle each `Msg`.
-fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
+fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     match msg {
         Msg::InputAChanged(number) => {
             log!(number);
@@ -84,9 +85,50 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
             model.b = number;
         }
         Msg::Equals => {
+            log!("calculate");
+            orders.skip();  // don't need to rerender now
+
             let operation = AddOperation::new(&[model.a, model.b]);
-            model.total = operation.to_output().get_result()
+            match model.method {
+                CalculationMethod::Frontend => {
+                    log!("add up numbers in the front end");
+                    let total = operation.to_output().get_result();
+                    orders.send_msg(Msg::TotalCalculated(total));
+                },
+                CalculationMethod::Backend => {
+                    log!("add up numbers in a lamdba at the backend");
+                    // could use url create here as well
+                    let url = format!("{}/add-numbers", constants::API_BASE_URL);
+                    let request = Request::new(url)
+                        .method(Method::Post)
+                        .json(&operation)
+                        .expect("serialisation go pop");
+
+                    orders.perform_cmd(async {
+                        let response = fetch(request).await.expect("HTTP request go pop");
+
+                        let total = response
+                            .check_status()
+                            .expect("Status go pop")
+                            .json::<logic::OperationResult>()
+                            .await
+                            .expect("deserialisation go pop")
+                            .get_result();
+
+                        log!("received total ", total);
+
+                        Msg::TotalCalculated(total)
+                    });
+                },
+                CalculationMethod::AsyncBackend => {
+                    log!("a websockety type thingy")
+                },
+            }
         },
+        Msg::TotalCalculated(total) => {
+            log!("total:", total);
+            model.total = total
+        }
         Msg::CalculationMethodChanged(method) => {
             model.method = CalculationMethod::from_str(&method).unwrap_or(CalculationMethod::Frontend);
         }

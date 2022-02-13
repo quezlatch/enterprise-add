@@ -1,12 +1,12 @@
 #[macro_use]
 extern crate serde_derive;
 
-#[derive(Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct AddOperation {
     numbers: Vec<i32>,
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct OperationResult {
     result: i32,
 }

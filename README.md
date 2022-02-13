@@ -26,6 +26,9 @@ Steps:
 
 There's a lot going on here, but I can hopefully refine when i understand `cargo make` better.
 
+**Note:** Safari does this weird thing where it starts throwing link errors when the page is loaded. Probably caching
+as clearing all the web data sorts it.
+
 ## Requirements (not required now i've got remote containers working)
 
 * rust (obvs)
