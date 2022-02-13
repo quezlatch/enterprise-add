@@ -4,6 +4,8 @@
 #![allow(clippy::wildcard_imports)]
 
 use seed::{prelude::*, *};
+use strum::IntoEnumIterator;
+use strum_macros::{Display, EnumIter};
 use logic::AddOperation;
 
 // ------ ------
@@ -25,6 +27,23 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 //     Model
 // ------ ------
 
+#[derive(Display, EnumIter)]
+enum CalculationMethod {
+    Frontend,
+    Backend,
+    AsyncBackend
+}
+
+impl CalculationMethod {
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::Frontend => "Calculate in web assembly",
+            Self::Backend => "Calculate serverside",
+            Self::AsyncBackend => "Calculate serverside asyncrously with websockets",
+        }
+    }
+}
+
 // `Model` describes our app state.
 struct Model {
     a: i32,
@@ -39,12 +58,13 @@ struct Model {
 // ------ ------
 
 // (Remove the line below once any of your `Msg` variants doesn't implement `Copy`.)
-#[derive(Copy, Clone)]
+#[derive(Debug, Clone)]
 // `Msg` describes the different events you can modify state with.
 enum Msg {
     InputAChanged(i32),
     InputBChanged(i32),
     Equals,
+    CalculationMethodChanged(String)
 }
 
 // `update` describes how to handle each `Msg`.
@@ -61,6 +81,9 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
         Msg::Equals => {
             let operation = AddOperation::new(&[model.a, model.b]);
             model.total = operation.to_output().get_result()
+        },
+        Msg::CalculationMethodChanged(_) => {
+            // nop
         }
     }
 }
@@ -109,6 +132,17 @@ fn view(model: &Model) -> Node<Msg> {
             At::ReadOnly => true,
             At::Value => model.total.to_string()
         }],
+        div![
+            br![],
+            "Calculation method: ",
+            select![
+                attrs! {
+                    At::Name => "calc_method"
+                },
+                CalculationMethod::iter().map(|method| option![attrs! {At::Value => method}, method.label()]),
+                input_ev(Ev::Change, Msg::CalculationMethodChanged),
+            ]
+        ],
         div![
             br![],
             "API base url: ",
