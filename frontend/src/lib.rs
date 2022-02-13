@@ -4,8 +4,9 @@
 #![allow(clippy::wildcard_imports)]
 
 use seed::{prelude::*, *};
+use std::str::FromStr;
 use strum::IntoEnumIterator;
-use strum_macros::{Display, EnumIter};
+use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
 use logic::AddOperation;
 
 // ------ ------
@@ -20,6 +21,7 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
         b: 0,
         input_element_b: ElRef::new(),
         total: 0,
+        method: CalculationMethod::Frontend
     }
 }
 
@@ -27,7 +29,9 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 //     Model
 // ------ ------
 
-#[derive(Display, EnumIter)]
+// probably don't need all of these...
+#[derive(Debug, Eq, PartialEq, EnumIter, EnumString, Display, IntoStaticStr)]
+#[strum(serialize_all = "title_case")]
 enum CalculationMethod {
     Frontend,
     Backend,
@@ -51,6 +55,7 @@ struct Model {
     b: i32,
     input_element_b: ElRef<web_sys::HtmlInputElement>,
     total: i32,
+    method: CalculationMethod,
 }
 
 // ------ ------
@@ -82,8 +87,8 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
             let operation = AddOperation::new(&[model.a, model.b]);
             model.total = operation.to_output().get_result()
         },
-        Msg::CalculationMethodChanged(_) => {
-            // nop
+        Msg::CalculationMethodChanged(method) => {
+            model.method = CalculationMethod::from_str(&method).unwrap_or(CalculationMethod::Frontend);
         }
     }
 }
