@@ -19,6 +19,8 @@ wasm-bindgen-test = "0.3.29"
 seed = "0.8.0"
 strum = "0.23"
 strum_macros = "0.23"
+tracing = "0.1.30"
+tracing-subscriber = "0.3.8"
 logic = { path = "../logic", version = "0.1.0"}
 
 [profile.release]

@@ -20,5 +20,5 @@ args = ["build","--release","--target","${RUST_TARGET}"]
 
 [tasks.packagelambda]
 command = "zip"
-args = ["-j", "target/rust.zip", "target/x86_64-unknown-linux-gnu/release/bootstrap"]
+args = ["-j", "target/rust.zip", "../target/x86_64-unknown-linux-gnu/release/bootstrap"]
 dependencies = ["build"]

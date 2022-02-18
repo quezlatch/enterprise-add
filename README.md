@@ -6,12 +6,23 @@ A bit of fun to make an isomorphic rust application in a mono repo that includes
 
 ## Getting started
 
-Still a work in progress... but a `vs code/docker` combo should make life easier. Either **Docker for Mac/Windows** or
-the CLI if you're brave/need the license and don't have it.
+Still a work in progress... but a `vs code/remote containers` combo should make life easier.
+You'll need docker running so either **Docker for Mac/Windows** or the CLI if you're brave/need the
+license and don't have it.
 
-Aside (https://github.com/abiosoft/colima might do the business on mac)
+[colima](https://github.com/abiosoft/colima) does the business on mac. You'll need brew installed and:
+
+``` bash
+brew install colima
+brew install docker
+colima start --cpu 4 --memory 4
+```
+
+It needs to be 4gb otherwise it goes pop on `cargo make watch`. Talking of watch, sometimes it goes mad and
+won't stop repeating. Don't know why...
 
 Steps:
+
 * make sure you have a aws profile for `add-number-tf` for **terraform**. Docker maps the .aws folder. Probably a better way for this...
 * checkout repo
 * open `code` in that folder
@@ -38,11 +49,7 @@ as clearing all the web data sorts it.
 
 ## Remote containers
 
-* lambdas need to be build in docker because of macos thing
-* calling docker from makefile task has probs when linking logic create
-* oo :) let's see if it works with vs code remote containers
-* then i can simplify the lambda build (no docker ness.)
-* docker needs to be root or cargo fails (CARGO_HOME has a weird setting)
+* remote containers work well because lambdas need to be build in docker because of macos thing
 * tweaked Dockerfile as well to add in bits
 * need a good way to add in aws credentials. going to mount .aws for the moment
 

@@ -1,7 +1,9 @@
 #[macro_use]
 extern crate serde_derive;
 
-#[derive(Serialize, Deserialize, Clone)]
+use tracing::{info};
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AddOperation {
     numbers: Vec<i32>,
 }
@@ -18,6 +20,7 @@ impl AddOperation {
         }
     }
 
+    #[tracing::instrument]
     pub fn to_output(&self) -> OperationResult {
         OperationResult {
             result: self.numbers.iter().sum(),

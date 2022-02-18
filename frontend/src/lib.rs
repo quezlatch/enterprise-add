@@ -7,6 +7,7 @@ use seed::{prelude::*, *};
 use std::str::FromStr;
 use strum::IntoEnumIterator;
 use strum_macros::{Display, EnumIter, EnumString, IntoStaticStr};
+use tracing::{instrument, debug, info};
 use logic::AddOperation;
 
 // ------ ------
@@ -14,6 +15,7 @@ use logic::AddOperation;
 // ------ ------
 
 // `init` describes what should happen when your app started.
+#[instrument]
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
         a: 0,
@@ -77,11 +79,11 @@ enum Msg {
 fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     match msg {
         Msg::InputAChanged(number) => {
-            log!(number);
+            debug!(number);
             model.a = number;
         }
         Msg::InputBChanged(number) => {
-            log!(number);
+            debug!(number);
             model.b = number;
         }
         Msg::Equals => {
@@ -91,12 +93,12 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             let operation = AddOperation::new(&[model.a, model.b]);
             match model.method {
                 CalculationMethod::Frontend => {
-                    log!("add up numbers in the front end");
+                    debug!("add up numbers in the front end");
                     let total = operation.to_output().get_result();
                     orders.send_msg(Msg::TotalCalculated(total));
                 },
                 CalculationMethod::Backend => {
-                    log!("add up numbers in a lamdba at the backend");
+                    debug!("add up numbers in a lamdba at the backend");
                     // could use url create here as well
                     let url = format!("{}/add-numbers", constants::API_BASE_URL);
                     let request = Request::new(url)
@@ -115,18 +117,18 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
                             .expect("deserialisation go pop")
                             .get_result();
 
-                        log!("received total ", total);
+                            debug!("received total {}", total);
 
                         Msg::TotalCalculated(total)
                     });
                 },
                 CalculationMethod::AsyncBackend => {
-                    log!("a websockety type thingy")
+                    debug!("a websockety type thingy")
                 },
             }
         },
         Msg::TotalCalculated(total) => {
-            log!("total:", total);
+            debug!("total: {}", total);
             model.total = total
         }
         Msg::CalculationMethodChanged(method) => {
@@ -205,6 +207,21 @@ fn view(model: &Model) -> Node<Msg> {
 // (This function is invoked by `init` function in `index.html`.)
 #[wasm_bindgen(start)]
 pub fn start() {
+    // tracing_subscriber::fmt()
+    //     .with_max_level(tracing::Level::TRACE)
+    //     .with_ansi(false)
+    //     .without_time()
+    //     .init();
+    let subscriber = tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::TRACE)
+        .with_ansi(true)
+        .without_time()
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber).unwrap();
+
+    info!("starting app");
+
     // Mount the `app` to the element with the `id` "app".
     App::start("app", init, update, view);
 }
